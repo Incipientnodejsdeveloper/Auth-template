@@ -23,7 +23,7 @@ DbInstance.then(()=>{
         console.log(`server running at port ${port}`);
     });
 })
-.catch((err) => {
+.catch((err: any) => {
     console.log("can't connect with the database",err);
     process.exit(1);
 })
