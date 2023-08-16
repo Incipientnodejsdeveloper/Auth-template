@@ -7,10 +7,19 @@ import { TUser, TVerifyResponse } from "../../utils/Types";
 import { createToken } from "../../middleware/authentication/createToken";
 import { v4 as uuidv4 } from "uuid";import * as bcrypt from "bcryptjs";
 import path from "path";
+import { userValidate } from "../../utils/validation";
 
 export const register = async (req: Request) => {
   try {
     const payload: TUser = req.body;
+
+    // velidation imple.
+    const { error} = userValidate(payload);
+    console.log("Getting payload validation", error)
+    if(error) {
+      return GenResObj(Code.BAD_REQUEST, false, error.details[0].message)
+    }
+
     const { email, name }: TUser = req.body;
 
     let checkEmail = await User.findOne({ email });
