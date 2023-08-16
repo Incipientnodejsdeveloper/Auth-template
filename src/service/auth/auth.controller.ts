@@ -56,6 +56,12 @@ export const authController = {
         const { code, data }: TResponse = await User.test(req)
         res.status(code).json(data);
         return;
+    },
+
+    getdata : async(req: Request, res: Response) => {
+        const { code, data } : TResponse = await User.getdata();
+        res.status(code).json(data);
+        return;
     }
 
 };

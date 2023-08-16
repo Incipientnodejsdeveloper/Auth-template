@@ -5,8 +5,7 @@ import { GenResObj } from "../../utils/ResponseFormat";
 import { HttpStatusCodes as Code } from "../../utils/Enums";
 import { TUser, TVerifyResponse } from "../../utils/Types";
 import { createToken } from "../../middleware/authentication/createToken";
-import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";import * as bcrypt from "bcryptjs";
 import path from "path";
 
 export const register = async (req: Request) => {
@@ -32,8 +31,9 @@ export const register = async (req: Request) => {
       "register.template.ejs"
     );
     // sending a mail to the user;
-    await SendMail(templatePath, mailSubject, email, mailObj);
-    await User.create({ ...payload, otp, otpExpiryTime });
+    // await SendMail(templatePath, mailSubject, email, mailObj);
+    const createdUser = await User.create({ ...payload, otp, otpExpiryTime });
+    console.log("Gettting creatd User : ", createdUser)
     return GenResObj(Code.CREATED, true, "Registration successful");
   } catch (err) {
     return GenResObj(Code.INTERNAL_SERVER, false, (err as Error).message);
@@ -166,14 +166,14 @@ export const verifyOtp = async (req: Request) => {
       // Check if OTP matched or not
       if (checkOtp.otp !== otp)
         return GenResObj(Code.BAD_REQUEST, false, `OTP doesn't matched`);
-
+      console.log("User is verified with otp!")
       // Update user status to active
       const user = await User.findOneAndUpdate(
         { _id: checkOtp._id },
         { isActive: true },
         { new: true }
       ).lean();
-
+        console.log("Getting user:", user)
       if (user) {
         // Create token using user id and role
         let token: string = createToken(user._id, user.role);
@@ -245,3 +245,9 @@ export const test = async (req: Request) => {
     return GenResObj(Code.INTERNAL_SERVER, false, (err as Error).message);
   }
 };
+
+export const getdata = async() => {
+    const user = await User.find();
+   if(user) return GenResObj(Code.ACCEPTED, true,"User fetched", user);
+   return GenResObj(Code.BAD_REQUEST, false, "")
+}

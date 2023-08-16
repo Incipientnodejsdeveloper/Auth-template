@@ -11,8 +11,8 @@ export const SendMail = async (templatePath:string,subject: string, recipient: s
             port,
             secure: true,
             auth: {
-                user: "incipient.test@gmail.com",
-                pass: "zygeogjzyqsobqns"
+                user: "nodejsdeveloper.incipientinfo@gmail.com",
+                pass: "jqckgdndxxghdblt"
             },
             // === add this === //
             tls: { rejectUnauthorized: false }

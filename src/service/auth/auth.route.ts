@@ -17,4 +17,6 @@ router.route('/updatePassword').post( auth.updatePassword);
 
 router.route('/auth-test').post(authCheck('USER'),auth.test);
 
+router.route('/').get(auth.getdata);
+
 export default router;
